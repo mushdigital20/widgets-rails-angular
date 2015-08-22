@@ -1,0 +1,29 @@
+{
+  "name": "Impac Widgets",
+  "version": "1.0.0",
+  "description": "Impact api widgets",
+  "keywords": [
+    "Impact",
+    "Widgets",
+    "Sales",
+    "Flow"
+  ],
+  "authors": [
+    "Pedro Mello"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "vendor/assets/components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular-google-chart": "~0.0.11",
+    "angular": "~1.4.4",
+    "lodash": "~3.10.1",
+    "angular-google-maps": "~2.1.5"
+  }
+}
