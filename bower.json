@@ -25,5 +25,8 @@
     "angular": "~1.4.4",
     "lodash": "~3.10.1",
     "angular-google-maps": "~2.1.5"
+  },
+  "resolutions":{
+    "angular": "~1.4.4",
   }
 }
