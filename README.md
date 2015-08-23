@@ -1,6 +1,7 @@
 # Impac! Widgets 
 Widgets with data from Impac!
-Ruby on Rails + Angular
+
+Ruby on Rails + Angular.js
 
 [Live demo](https://thawing-mesa-3117.herokuapp.com/)
 
