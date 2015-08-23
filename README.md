@@ -2,6 +2,8 @@
 Widgets with data from Impac!
 Ruby on Rails + Angular
 
+[Live demo](https://thawing-mesa-3117.herokuapp.com/)
+
 ## Running it
 ```bash
 # clone the repository
