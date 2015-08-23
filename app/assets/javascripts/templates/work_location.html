@@ -1,13 +1,12 @@
 <div class="panel panel-default">
     <div class="panel-heading">
-        <i class="fa fa-bar-chart-o fa-fw"></i> Sales Flow 
+        <i class="fa fa-bar-chart-o fa-fw"></i> Work Locations
         
         <div ng-show="isLoading" style="display:inline-block;margin-left:10px;">
             <i class="fa fa-spinner fa-spin"></i> Loading...
         </div>
-        
 
-        <buttons-group id="sales-tab" groups='["Map","Graph"]' css-class="pull-right" on-change-callback="onChangeTab(selected)"> </buttons-group>
+        <buttons-group id="locations-tab" groups='["Map","Graph"]' css-class="pull-right" on-change-callback="onChangeTab(selected)"> </buttons-group>
 
     </div>
     <!-- /.panel-heading -->
@@ -19,15 +18,15 @@
                         <thead>
                             <tr>
                                 <th>Location</th>
-                                <th>Total Sales</th>
+                                <th>Employees</th>
                                 <th>Legend</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr ng-repeat="sale in data" ng-attr-id="{{sale.label}}" ng-mouseover="selectLocation(sale.center)">
-                                <td>{{sale.label}}</td>
-                                <td align="right">{{sale.value | currency : $ : 2}}</td>
-                                <td align="center"><div class="graph-legend" style="background-color:{{sale.color.color}}"></div></td>
+                            <tr ng-repeat="location in data | orderBy:'-employee_count'" ng-attr-id="{{location.label}}" ng-mouseover="selectLocation(location.center)">
+                                <td>{{location.label}}</td>
+                                <td align="right">{{location.value}}</td>
+                                <td align="center"><div class="graph-legend" style="background-color:{{location.color.color}}"></div></td>
                             </tr>
                         </tbody>
                     </table>
@@ -38,28 +37,28 @@
             <div class="col-lg-8">
 
                 <div id="myTabContent" class="tab-content">
-                  <div role="tabpanel" class="tab-pane fade in active" id="sales-tab-map" aria-labelledBy="map-tab">
+                  <div role="tabpanel" class="tab-pane fade in active" id="locations-tab-map" aria-labelledBy="map-tab">
                     
                         <ui-gmap-google-map center='map.center' zoom='map.zoom'>
 
-                            <ui-gmap-circle ng-repeat="sale in data" center="sale.center"
-                                radius='circleRadius(sale.value)'
-                                fill="sale.color"
-                                stroke="sale.stroke"
+                            <ui-gmap-circle ng-repeat="location in data" center="location.center"
+                                radius='circleRadius(location.value)'
+                                fill="location.color"
+                                stroke="location.stroke"
                                 clickable='false'
                                 draggable='false'
                                 editable='false'
-                                visible='sale.visible'
+                                visible='location.visible'
                                 >
-                            <ui-gmap-window show="showInfoWindow(sale.center)" coords="sale.center" >
-                                <div><h5>{{sale.label}}:</h5> <h6>${{sale.value | currency : 2}}</h6></div>
+                            <ui-gmap-window show="showInfoWindow(location.center)" coords="location.center" >
+                                <div><h5>{{location.label}}:</h5> <h6>{{location.value}} employees</h6></div>
                             </ui-gmap-window>
                             </ui-gmap-circle>
                             
                         </ui-gmap-google-map>
                     
                   </div>
-                  <div role="tabpanel" class="tab-pane fade" id="sales-tab-graph" aria-labelledBy="graph-tab" style="width: 100%; height: 400px;">
+                  <div role="tabpanel" class="tab-pane fade" id="locations-tab-graph" aria-labelledBy="graph-tab" style="width: 100%; height: 400px;">
                         <div google-chart class="chart-container" style="width: 100%; height: 400px;" chart="chart"></div>
                   </div>
                 </div>

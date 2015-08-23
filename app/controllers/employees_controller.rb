@@ -1,42 +1,52 @@
 #!/usr/bin/ruby
 # @Author: pedromello
 # @Date:   2015-08-16 00:26:45
-# @Last Modified by:   pedromello
-# @Last Modified time: 2015-08-19 09:57:36
+# @Last Modified by:   Pedro Mello
+# @Last Modified time: 2015-08-23 19:26:08
 
 class EmployeesController < ApplicationController
 
 	def show_location
-		employees = Employee.list()
-		raise employees.inspect
+		employees = Employee.details()["employees"]
 
-		#groups all invoices by City
-		grouped_by_city = employees.group_by {|item| item["address"]["l"]}
-		
+		locations = {}
 
-		grouped_by_city.each do |city,info|
+		#work around for locations, should come from the API
+		coords = {
+			"711a8571-0b31-0133-4ced-22000aac0203"=>{:center=>{:latitude=>37.7919615,:longitude=>-122.2287941},:name=>"Work Location 1"}
+		}
 
-			#iterates all the entities
-			info.each do |entity|
-				#country the city belongs to 
-				country = entity["address"]["c"]
-				#start hash for the city if not present
-				total_sales[city] = {
-					:total_invoiced => 0,
-					:total_paid => 0,
-					:total_due => 0,
-				 	:country=>country} unless total_sales.has_key?(city)
+		#counts the employees for each work location
+		employees.each do |employee|
+			employee["work_locations"].each do |work|
+				work_id = work["id"]
 
-				#sums the totals
-				total_sales[city][:total_invoiced] += entity["total_invoiced"].to_f
-				total_sales[city][:total_paid] += entity["total_paid"].to_f
-				total_sales[city][:total_due] += entity["total_due"].to_f
+				locations[work_id] = {
+					:id=>work_id,
+					:employee_count => 0,
+					:employees => [],
+					:center => coords[work_id][:center],
+					:label => coords[work_id][:name],
+					:color => {:color=>"\##{("%06x" % (rand * 0xffffff))}",:opacity=>0.7}, #Generates a random color for the graph
+					:stroke =>{:color=>"transparent",:opacity=>0}
+				} unless locations.has_key?(work_id)
+				
+				locations[work_id][:employee_count] += 1
+				locations[work_id][:value] = locations[work_id][:employee_count]
+				locations[work_id][:employees] << employee
 			end
 		end
 
-		#sort hash by total invoiced amount
-		b = total_sales.sort_by { |k, v| v[:total_invoiced] }.reverse
-		
-		render json: entities.as_json()
+		#format data for graph
+		graph_data = []
+		slices = []
+		locations.values.each do |item|
+			graph_data << {:c=>[{:v=>item[:label]},{:v=>item[:value]}]}
+			slices << {:color=>item[:color][:color]}
+		end
+
+		result = {:map=>locations.values,:graph=>{:data=>graph_data,:slices=>slices}}
+
+		render json: result.as_json()
 	end
 end

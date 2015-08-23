@@ -4,10 +4,10 @@
  * @Date:   2015-08-15
 ###
 
-angular.module('app').controller('SalesFlowController',['$scope','invoicesService','bubblesService',($scope,invoicesService,bubblesService)->
+angular.module('app').controller('WorkLocationController',['$scope','employeesService','bubblesService',($scope,employeesService,bubblesService)->
 
 	#loads data from backend
-	invoicesService.getSalesFlow().then (data)->
+	employeesService.getWorkLocations().then (data)->
     bubblesService.calculateMinMax(data.map)
     $scope.data = data.map
     $scope.isLoading = false
@@ -16,6 +16,8 @@ angular.module('app').controller('SalesFlowController',['$scope','invoicesServic
 
   $scope.chart = {};
 
+  $scope.isLoading = true
+
   $scope.chart.data = {"cols":[{id: "t", label: "Location", type: "string"},{id: "s", label: "Total", type: "number"}]};
   $scope.chart.type = 'PieChart';
   $scope.chart.options = {legend: 'none',width:600,height:400,pieHole:0.4,chartArea:{width:'90%',height:'90%'},pieSliceText:'none'}
@@ -23,9 +25,8 @@ angular.module('app').controller('SalesFlowController',['$scope','invoicesServic
   $scope.initial = {center: { latitude: 8.252275, longitude:-161.423841}, zoom: 2}
   $scope.map = $scope.initial
 
-  $scope.isLoading = true
-
   $scope.selectLocation = (center) ->
+    console.log center
     if center.latitude and center.longitude
       $scope.map = {center: center, zoom: 5}
     else
@@ -37,6 +38,5 @@ angular.module('app').controller('SalesFlowController',['$scope','invoicesServic
   $scope.showInfoWindow = (center)->
     $scope.map.center.latitude == center.latitude and $scope.map.center.longitude == center.longitude
 
-  $scope.color = {color:'#FFCCEE',opacity:1}
 
 ])
